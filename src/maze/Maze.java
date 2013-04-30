@@ -12,6 +12,8 @@ private JButton jbtClearPath = new JButton("Clear Path");
 private JPanel jpBoard, jpButton;
 private JLabel jlblStatus = new JLabel();
 
+
+// initialize the GUI
 public void init() {
 	  setSize(500,500);
  jpBoard = new JPanel();
@@ -58,7 +60,7 @@ public static void main(String[] args) {
 
  // Display the frame
  frame.setSize(300, 300);
- frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+ frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
  frame.setLocationRelativeTo(null); // Center the frame
  frame.setVisible(true);
 }
@@ -78,6 +80,19 @@ class Listener implements ActionListener {
 	  }
 }
 
+
+
+
+/** 
+ * recursive method to find the path
+ * 
+ * we need to rework this method so	it doesn't do that strange snake motion
+ * across the board. Also, I think it would be nice to put a few millisecond
+ * pause after each recursion so the user (Ian) can see how the program
+ * goes about finding the correct path.
+ * 
+ * Jason
+ */
 public void findPath() {
  if (findPath(0, 0)) {
    jlblStatus.setText("path found");
@@ -91,7 +106,7 @@ public boolean findPath(int row, int col) {
 	  
  board[row][col].visit();
 
- if ((col == 49) && (row == 49)) {
+ if ((col == 24) && (row == 24)) {
    board[row][col].selectCell();
    return true;
  }
@@ -108,7 +123,7 @@ public boolean findPath(int row, int col) {
    unblock(row, col);
  }
 
- if ((row < 49) && !board[row + 1][col].marked() &&
+ if ((row < 24) && !board[row + 1][col].marked() &&
      !board[row + 1][col].blocked() && !board[row + 1][col].visited()) {
    block(row, col);
 
@@ -131,7 +146,7 @@ public boolean findPath(int row, int col) {
    unblock(row,col);
  }
 
- if ((col < 49) && !board[row][col + 1].marked() &&
+ if ((col < 24) && !board[row][col + 1].marked() &&
      !board[row][col + 1].blocked() && !board[row][col + 1].visited()) {
    block(row,col);
    if (findPath(row, col + 1)) {
@@ -145,13 +160,22 @@ public boolean findPath(int row, int col) {
  return false;
 }
 
-// Temporary block the neighbor to prevent neighboring path
+
+/**
+ * Temporary block method
+ * 
+ * blocks the neighbor to prevent neighboring path.
+ * 
+ * possibly remove this method
+ * 
+ * @author Jason
+ */
 public void block(int row, int col) {
  if (row > 0) {
    board[row - 1][col].block();
  }
 
- if (row < 49) {
+ if (row < 24) {
    board[row + 1][col].block();
  }
 
@@ -159,18 +183,26 @@ public void block(int row, int col) {
    board[row][col - 1].block();
  }
 
- if (col < 49) {
+ if (col < 24) {
    board[row][col + 1].block();
  }
 }
 
-// Remove the temporary block
+
+
+
+
+/**
+ * Method to remove the temporary block
+ * 
+ * 
+ */
 public void unblock(int row, int col) {
  if (row > 0) {
    board[row - 1][col].unblock();
  }
 
- if (row < 49) {
+ if (row < 24) {
    board[row + 1][col].unblock();
  }
 
@@ -178,11 +210,25 @@ public void unblock(int row, int col) {
    board[row][col - 1].unblock();
  }
 
- if (col < 49) {
+ if (col < 24) {
    board[row][col + 1].unblock();
  }
 }
 
+
+
+
+/**
+ * method to clear the path
+ * 
+ * this is the method that isn't functioning as it should.
+ * we can either remove it completely and replace the button 
+ * with my close window method, or we can re work this method
+ * so it functions properly
+ * 
+ * Jason
+ * 
+ */
 public void clearPath() {
  for (int row = 0; row < board.length; row++) {
    for (int col = 0; col < board[row].length; col++) {
@@ -191,6 +237,23 @@ public void clearPath() {
  }
 }
 
+
+
+
+
+
+
+
+/**
+ * Cell class
+ * 
+ * we could update this class to display graphics such as brick walls,
+ * a start and stop graphic for the starting and ending cells, maybe a
+ * character or some image that moves after each recursion...
+ * 
+ * Jason
+ *
+ */
 // Inner class
 class Cell extends JPanel implements MouseListener {
  private boolean marked = false;
