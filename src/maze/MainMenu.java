@@ -1,19 +1,9 @@
 package maze;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.FlowLayout;
-import javax.swing.JButton;
-import javax.swing.JToolBar;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.event.*;
 
 public class MainMenu extends JFrame {
 
@@ -46,27 +36,32 @@ public class MainMenu extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		// currently not working
+
+		/**
+		 * Working, but I'm going to rework the maze so it's not a JApplet
+		 * 
+		 * Jason
+		 */
 		JButton btnBuildMaze = new JButton("Build A Maze");
 		btnBuildMaze.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Maze maze = new Maze();
 				maze.setVisible(true);
+				maze.init();
 			}
 		});
 		panel.add(btnBuildMaze);
-		
+
 		JButton btnRamdomMaze = new JButton("Random Maze");
 		panel.add(btnRamdomMaze);
-		
+
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
-		
+
 		JLabel lblTitle = new JLabel("Adam & Jason's Amazing Maze!");
 		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
