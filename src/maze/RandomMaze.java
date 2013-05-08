@@ -82,7 +82,14 @@ public class RandomMaze extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearAll();
-				createRandomMaze(board); // we should work on this so the new maze button can create a new random maze
+				jpBoard.removeAll();
+				board = createRandomMaze(testBoard); // we should work on this so the new maze button can create a new random maze
+				for (int row = 0; row < board.length; row++) {
+					for (int col = 0; col < board[row].length; col++) {
+						jpBoard.add(board[row][col]);
+					}
+				}
+				revalidate();
 			}
 		});
 		jbtClose.addActionListener(new ActionListener(){		// added 5/8
@@ -149,9 +156,11 @@ public class RandomMaze extends JFrame {
 		for (int row = 0; row < nBoard.length; row++) {
 			for (int col = 0; col < nBoard[row].length; col++) {
 				nBoard[row][col] = new Cell();
-				int randSeed = (int)(Math.random() * 100 + 1);
-				if(randSeed > 50)
-					nBoard[row][col].setMarked();
+				if((row > 0 && col > 0)){
+					int randSeed = (int)(Math.random() * 100 + 1);
+					if(randSeed > 50)
+						nBoard[row][col].setMarked();
+				}
 			}
 		}
 		MazeTester newMaze = new MazeTester(nBoard, rowN, colN );
