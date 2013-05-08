@@ -57,6 +57,13 @@ public class MainMenu extends JFrame {
 		panel.add(btnBuildMaze);
 
 		JButton btnRamdomMaze = new JButton("Random Maze");
+		btnRamdomMaze.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				RandomMaze randMaze = new RandomMaze();
+				randMaze.setVisible(true);
+				randMaze.init();
+			}
+		});
 		panel.add(btnRamdomMaze);
 
 		JPanel panel_1 = new JPanel();
