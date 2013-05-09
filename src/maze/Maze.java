@@ -354,7 +354,6 @@ public class Maze extends JFrame {
 
 		public void selectCell() {
 			setBackground(Color.RED);
-
 			repaint();
 		}
 
