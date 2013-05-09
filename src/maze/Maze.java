@@ -84,7 +84,7 @@ public class Maze extends JFrame {
 		jbtClearPath.addActionListener(new Listener());
 		jbtClearMaze.addActionListener(new Listener());		// added 5/8
 		jbtClose.addActionListener(new Listener());			// added 5/8
-		
+		clearPath();
 		setMarkers();
 	}
 
@@ -301,8 +301,8 @@ public class Maze extends JFrame {
 	}
 
 	public void setMarkers(){
-		board[0][0].setBackground(Color.green);
-		board[rowN-1][colN-1].setBackground(Color.orange);
+		board[0][0].setStart();
+		board[rowN-1][colN-1].setFinish();
 	}
 
 
@@ -322,12 +322,28 @@ public class Maze extends JFrame {
 		private boolean marked = false;
 		private boolean visited = false;
 		private boolean blocked = false;
-
+		private boolean start = false;
+		private boolean finish = false;
 		public Cell() {
 			setBackground(Color.DARK_GRAY);
 			addMouseListener(this);
 		}
-
+		public void setStart(){
+			start = true;
+		}
+		public boolean isStart(){
+			return start;
+		}
+		public void setFinish(){
+			finish = true;
+		}
+		public boolean isFinish(){
+			return finish;
+		}
+		public void removeMarker(){
+			start = false;
+			finish = false;
+		}
 		public boolean marked() {
 			return marked;
 		}
@@ -379,23 +395,32 @@ public class Maze extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 
-			if (marked) {
-				try{
-					image = ImageIO.read(new File("Brick.jpg"));
+			try{
+				if(isStart()){		//added 5/8 AA
+					BufferedImage image = ImageIO.read(new File("StartIcon.jpg"));
 					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
-					//ImageIcon icon = new ImageIcon(scaledImage);
 					g.drawImage(scaledImage, 0 ,0,null);
 				}
-				catch(IOException ex){};
-			}
+				if(isFinish()){		//added 5/8 AA
+					BufferedImage image = ImageIO.read(new File("FinishIcon.jpg"));
+					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
+					g.drawImage(scaledImage, 0 ,0,null);
+				}
+				if (marked) {
+					BufferedImage image = ImageIO.read(new File("Brick.jpg"));
+					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
+					g.drawImage(scaledImage, 0 ,0,null);
+				}
+
+			}catch(IOException ex){};
 		}
 
 		public void mouseClicked(MouseEvent e) {
 		}
 
 		public void mouseEntered(MouseEvent e) {		// added 5/8 JB
-			if(isPressed()){
-				marked = true;
+			if(isPressed() && !isStart() && !isFinish()){
+				marked = !marked;		//added 5/8 AA
 				repaint();
 			}
 		}
@@ -408,9 +433,11 @@ public class Maze extends JFrame {
 		}
 
 		public void mousePressed(MouseEvent e) {		// added 5/8 JB
-			setPressed(true);
-			marked = !marked;
-			repaint();
+			if(!isStart() && !isFinish()){
+				setPressed(true);
+				marked = !marked;		
+				repaint();
+			}
 		}
 	}
 }

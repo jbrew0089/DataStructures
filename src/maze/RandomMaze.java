@@ -8,12 +8,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import maze.Maze.Listener;
-
 public class RandomMaze extends JFrame {
 
-	private int rowN = 10;
-	private int colN = 10;
+	private int rowN = 25;
+	private int colN = 25;
 	private Cell[][] board = new Cell[rowN][colN];
 	private Cell[][] testBoard = new Cell[rowN][colN];
 	private JButton jbtFindPath = new JButton("Find Path");
@@ -57,6 +55,7 @@ public class RandomMaze extends JFrame {
 		add(jlblStatus, BorderLayout.NORTH);
 		add(jpBoard, BorderLayout.CENTER);
 		add(jpButton, BorderLayout.SOUTH);
+		clearPath();
 		setMarkers();
 		// Register listeners
 		jbtFindPath.addActionListener(new ActionListener(){
@@ -83,13 +82,15 @@ public class RandomMaze extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				clearAll();
 				jpBoard.removeAll();
-				board = createRandomMaze(testBoard); // we should work on this so the new maze button can create a new random maze
+				board = createRandomMaze(testBoard); 				//added 5/8 AA
 				for (int row = 0; row < board.length; row++) {
 					for (int col = 0; col < board[row].length; col++) {
 						jpBoard.add(board[row][col]);
 					}
 				}
 				revalidate();
+				clearPath();
+				setMarkers();
 			}
 		});
 		jbtClose.addActionListener(new ActionListener(){		// added 5/8
@@ -106,7 +107,6 @@ public class RandomMaze extends JFrame {
 	 * Jason
 	 */
 	public void closeWindow(){
-
 		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
 	}
@@ -141,7 +141,7 @@ public class RandomMaze extends JFrame {
 
 	protected void resetPath() {
 		pathFound = false;
-		repaint();
+//		repaint();
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
 				board[row][col].unblock();
@@ -183,8 +183,8 @@ public class RandomMaze extends JFrame {
 	 * 
 	 */
 	public void setMarkers(){
-		board[0][0].setBackground(Color.green);
-		board[rowN-1][colN-1].setBackground(Color.orange);
+		board[0][0].setStart();
+		board[rowN-1][colN-1].setFinish();
 	}
 	// Main method
 	public static void main(String[] args) {
@@ -209,7 +209,6 @@ public class RandomMaze extends JFrame {
 	}
 
 	public void findPath() {
-		//		printBoard(board);
 		if (findPath(0, 0)) {
 			jlblStatus.setText("path found");
 			pathFound = true;
@@ -224,6 +223,7 @@ public class RandomMaze extends JFrame {
 
 		if ((col == colN-1) && (row == rowN-1)) {
 			board[row][col].selectCell();
+			//repaint();				//added 5/8 AA
 			return true;
 		}
 		if ((row < rowN-1) && !board[row + 1][col].marked() &&
@@ -232,6 +232,7 @@ public class RandomMaze extends JFrame {
 
 			if (findPath(row + 1, col)) {
 				board[row][col].selectCell();
+				//repaint();				//added 5/8 AA
 				return true;
 			}
 
@@ -242,6 +243,7 @@ public class RandomMaze extends JFrame {
 			block(row,col);
 			if (findPath(row, col + 1)) {
 				board[row][col].selectCell();
+				//repaint();				//added 5/8 AA
 				return true;
 			}
 
@@ -253,6 +255,7 @@ public class RandomMaze extends JFrame {
 
 			if (findPath(row - 1, col)) {
 				board[row][col].selectCell();
+				//repaint();				//added 5/8 AA
 				return true;
 			}
 
@@ -263,6 +266,7 @@ public class RandomMaze extends JFrame {
 			block(row,col);
 			if (findPath(row, col - 1)) {
 				board[row][col].selectCell();
+				//repaint();				//added 5/8 AA
 				return true;
 			}
 
@@ -315,16 +319,35 @@ public class RandomMaze extends JFrame {
 				board[row][col].deselectCell();
 			}
 		}
+		//repaint();	//added 5/8 AA
 	}
 	// Inner class
 	class Cell extends JPanel implements MouseListener {
-		private BufferedImage image;
+//		private BufferedImage image;
 		private boolean marked = false;
 		private boolean visited = false;
 		private boolean blocked = false;
+		private boolean start = false;
+		private boolean finish = false;
 		public Cell() {
 			setBackground(Color.DARK_GRAY);
 			addMouseListener(this);
+		}
+		public void setStart(){
+			start = true;
+		}
+		public boolean isStart(){
+			return start;
+		}
+		public void setFinish(){
+			finish = true;
+		}
+		public boolean isFinish(){
+			return finish;
+		}
+		public void removeMarker(){
+			start = false;
+			finish = false;
 		}
 		public boolean marked() {
 			return marked;
@@ -372,21 +395,30 @@ public class RandomMaze extends JFrame {
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			if (marked) {
-				try{
-					image = ImageIO.read(new File("Brick.jpg"));
+			try{
+				if(isStart()){		//added 5/8 AA
+					BufferedImage image = ImageIO.read(new File("StartIcon.jpg"));
 					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
-					//ImageIcon icon = new ImageIcon(scaledImage);
 					g.drawImage(scaledImage, 0 ,0,null);
-				}catch(IOException ex){};
-			}
-			
+				}
+				if(isFinish()){		//added 5/8 AA
+					BufferedImage image = ImageIO.read(new File("FinishIcon.jpg"));
+					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
+					g.drawImage(scaledImage, 0 ,0,null);
+				}
+				if (marked) {
+					BufferedImage image = ImageIO.read(new File("Brick.jpg"));
+					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
+					g.drawImage(scaledImage, 0 ,0,null);
+				}
+
+			}catch(IOException ex){};
 		}
 		public void mouseClicked(MouseEvent e) {
 		}
 		public void mouseEntered(MouseEvent e) {
-			if(isPressed()){
-				marked = true;
+			if(isPressed() && !isStart() && !isFinish()){
+				marked = !marked;		//added 5/8 AA
 				repaint();
 			}
 		}
@@ -396,9 +428,11 @@ public class RandomMaze extends JFrame {
 			setPressed(false);
 		}
 		public void mousePressed(MouseEvent e) {
-			setPressed(true);
-			marked = !marked;
-			repaint();
+			if(!isStart() && !isFinish()){
+				setPressed(true);
+				marked = !marked;		
+				repaint();
+			}
 		}
 	}
 }
