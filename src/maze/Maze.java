@@ -12,14 +12,10 @@ import javax.swing.*;
 
 
 
-/**
- * 
- * Maze
- *
- */
+// Maze class
 public class Maze extends JFrame {
-	private int rowN = 10;
-	private int colN = 10;
+	private int rowN = MainMenu.getBoardSize();
+	private int colN = MainMenu.getBoardSize();
 	private Cell[][] board = new Cell[rowN][colN];
 	private JButton jbtFindPath = new JButton("Find Path");
 	private JButton jbtClearPath = new JButton("Clear Path");
@@ -30,31 +26,12 @@ public class Maze extends JFrame {
 	private boolean pressed = false;				// added 5/8 JB
 
 
-
-
-	// Main method
-	public static void main(String[] args) {
-		// Create a frame
-		//JFrame frame = new JFrame("Maze");
-
-		// Create an
-		Maze frame = new Maze();
-
-		// Invoke init()
-		frame.init();
-		// Display the frame
-		frame.setSize(500, 500);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setLocationRelativeTo(null); // Center the frame
-		frame.setVisible(true);
-	}
-
-
-
-
-	// initialize the GUI
-	public void init() {
-		setSize(500,500);
+	public Maze(){
+		setTitle("Build Your Own Maze");
+		setSize(500, 500);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null); // Center the frame
+		setVisible(true);
 		jpBoard = new JPanel();
 		jpBoard.setLayout(new GridLayout(rowN, colN));
 
@@ -64,6 +41,7 @@ public class Maze extends JFrame {
 		jpButton.add(jbtClearPath);
 		jpButton.add(jbtClearMaze);			// added 5/8 JB
 		jpButton.add(jbtClose);				// added 5/8 JB
+
 
 		// Add cells to jpBoard
 		for (int row = 0; row < board.length; row++) {
@@ -80,51 +58,53 @@ public class Maze extends JFrame {
 		add(jpButton, BorderLayout.SOUTH);
 
 		// Register listeners
-		jbtFindPath.addActionListener(new Listener());
-		jbtClearPath.addActionListener(new Listener());
-		jbtClearMaze.addActionListener(new Listener());		// added 5/8
-		jbtClose.addActionListener(new Listener());			// added 5/8
-		clearPath();
+		jbtFindPath.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				findPath();
+			}
+		});
+		jbtClearPath.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearPath();
+				setMarkers();
+			}
+		});
+		jbtClearMaze.addActionListener(new ActionListener(){		// added 5/8
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearAll();
+				setMarkers();
+			}
+		});
+		jbtClose.addActionListener(new ActionListener(){		// added 5/8
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				closeWindow();
+
+			}
+		});
 		setMarkers();
 	}
 
-	
 
-	class Listener implements ActionListener {
-		@Override 
-		public void actionPerformed(ActionEvent e) {
-			String arg = e.getActionCommand();
-			if (e.getSource() instanceof JButton) {
-				if ("Find Path".equals(arg)) {
-					clearPath();
-					findPath();
-				}
-				else if ("Clear Path".equals(arg)) {
-					clearPath();
-					setMarkers();
-				}
-				else if ("Clear Maze".equals(arg)) {   	// added on 5/8
-					clearAll();
-					setMarkers();
-				}
-				else if ("Close".equals(arg)) {			// added on 5/8
-					closeWindow();
-				}
-			}
-		}
+
+
+	// Main method
+	public static void main(String[] args) {
+		// Create a frame
+		Maze frame = new Maze();
 	}
 
 
 
 
-	/** 
-	 * recursive method to find the path
-	 * 
-	 * Adam, I believe you have the updated code to fix this
-	 * so it no longer snakes across the frame
-	 * 
-	 * Jason
-	 */
+
+
+
+
+	// recursive method to find a path from start to finish
 	public void findPath() {
 		if (findPath(0, 0)) {
 			jlblStatus.setText("path found");
@@ -188,15 +168,7 @@ public class Maze extends JFrame {
 	}
 
 
-	/**
-	 * Temporary block method
-	 * 
-	 * blocks the neighbor to prevent neighboring path.
-	 * 
-	 * possibly remove this method
-	 * 
-	 * @author Jason
-	 */
+	// Temporary block the neighbor to prevent neighboring path
 	public void block(int row, int col) {
 		if (row > 0) {
 			board[row - 1][col].block();
@@ -218,11 +190,7 @@ public class Maze extends JFrame {
 
 
 
-	/**
-	 * Method to remove the temporary block
-	 * 
-	 * 
-	 */
+	// Remove the temporary block
 	public void unblock(int row, int col) {
 		if (row > 0) {
 			board[row - 1][col].unblock();
@@ -244,14 +212,17 @@ public class Maze extends JFrame {
 
 
 
-	/**
-	 * method to clear the path
-	 * 
-	 * Fixed, now it is working properly
-	 * 
-	 * Jason
-	 * 
-	 */
+	// method for closing the window
+	public void closeWindow(){
+
+		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
+	}
+
+
+
+
+	// method to only clear the path
 	public void clearPath() {
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
@@ -261,25 +232,12 @@ public class Maze extends JFrame {
 	}
 
 
-	/** 
-	 * method for closing the window
-	 * 
-	 * Jason
-	 */
-	public void closeWindow(){
-
-		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
-	}
 
 
 
-	/**
-	 * clearAll method to clear the entire maze
-	 * 
-	 * Jason
-	 */
 
+
+	// clearAll method to clear the entire maze board
 	public void clearAll() {								// added 5/8 JB
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
@@ -290,33 +248,30 @@ public class Maze extends JFrame {
 
 
 
-
+	// getter method to determine if the mouse is pressed
 	public boolean isPressed(){			// added 5/8 JB
 		return pressed;
 	}
 
-
+	// setter method to set the mouse pressed variable
 	public void setPressed(boolean e){		// added 5/8 JB
 		pressed = e;
 	}
 
+
+	// method to add start and finish graphics to the board
 	public void setMarkers(){
 		board[0][0].setStart();
 		board[rowN-1][colN-1].setFinish();
 	}
 
 
-	/**
-	 * Cell class
-	 * 
-	 * we could update this class to display graphics such as brick walls,
-	 * a start and stop graphic for the starting and ending cells, maybe a
-	 * character or some image that moves after each recursion...
-	 * 
-	 * Jason
-	 *
-	 */
-	public // Inner class
+
+
+
+
+
+	// Inner class
 	class Cell extends JPanel implements MouseListener {
 		private BufferedImage image;
 		private boolean marked = false;
@@ -419,8 +374,21 @@ public class Maze extends JFrame {
 		}
 
 		public void mouseEntered(MouseEvent e) {		// added 5/8 JB
-			if(isPressed() && !isStart() && !isFinish()){
-				marked = !marked;		//added 5/8 AA
+			//			if(isPressed() && !isStart() && !isFinish()){
+			//				marked = !marked;		//added 5/8 AA
+			//				repaint();
+
+			/**
+			 * try it out with this code, if you click on an empty cell
+			 * and drag it will fill the cells with the brick image and
+			 * it will not remove bricks if you go over them, but if you 
+			 * click on a cell with a brick it will remove it.
+			 * 
+			 * if you don't like it we can go back to the code above
+			 * 
+			 */
+			if(isPressed()){
+				marked = true;
 				repaint();
 			}
 		}

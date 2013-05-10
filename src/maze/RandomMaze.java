@@ -10,8 +10,8 @@ import javax.swing.*;
 
 public class RandomMaze extends JFrame {
 
-	private int rowN = 25;
-	private int colN = 25;
+	private int rowN = MainMenu.getBoardSize();
+	private int colN = MainMenu.getBoardSize();
 	private Cell[][] board = new Cell[rowN][colN];
 	private Cell[][] testBoard = new Cell[rowN][colN];
 	private JButton jbtFindPath = new JButton("Find Path");
@@ -21,12 +21,15 @@ public class RandomMaze extends JFrame {
 	private JPanel jpBoard, jpButton;
 	private JLabel jlblStatus = new JLabel("Started..");
 	private boolean pressed = false;				// added 5/8 JB
-
 	private boolean pathFound = false;
-	
-	
-	public void init() {
+
+
+	public RandomMaze() {
+		setTitle("Random Maze");
 		setSize(500,500);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null); // Center the frame
+		setVisible(true);
 		jpBoard = new JPanel();
 		jpBoard.setLayout(new GridLayout(rowN, colN));
 
@@ -37,12 +40,7 @@ public class RandomMaze extends JFrame {
 		jpButton.add(jbtNewMaze);			// added 5/8 JB
 		jpButton.add(jbtClose);				// added 5/8 JB
 
-		// Add cells to jpBoard
-		//		for (int row = 0; row < testBoard.length; row++) {
-		//			for (int col = 0; col < testBoard[row].length; col++) {
-		//				testBoard[row][col] = new Cell();
-		//			}
-		//		}
+
 		board = createRandomMaze(testBoard);
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
@@ -101,113 +99,24 @@ public class RandomMaze extends JFrame {
 			}
 		});
 	}
-	/** 
-	 * method for closing the window
-	 * 
-	 * Jason
-	 */
-	public void closeWindow(){
-		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
-	}
-
-
-
-	/**
-	 * clearAll method to clear the entire maze
-	 * 
-	 * Jason
-	 */
-
-	public void clearAll() {								// added 5/8 JB
-		for (int row = 0; row < board.length; row++) {
-			for (int col = 0; col < board[row].length; col++) {
-				board[row][col].resetCell();
-			}
-		}
-	}
 
 
 
 
-	public boolean isPressed(){			// added 5/8 JB
-		return pressed;
-	}
 
-
-	public void setPressed(boolean e){		// added 5/8 JB
-		pressed = e;
-	}
-
-	protected void resetPath() {
-		pathFound = false;
-//		repaint();
-		for (int row = 0; row < board.length; row++) {
-			for (int col = 0; col < board[row].length; col++) {
-				board[row][col].unblock();
-				board[row][col].deselectCell();
-				unblock(row, col);
-			}
-		}
-		revalidate();
-		repaint();
-	}
-	public Cell[][] createRandomMaze(Cell[][] nBoard){
-		for (int row = 0; row < nBoard.length; row++) {
-			for (int col = 0; col < nBoard[row].length; col++) {
-				nBoard[row][col] = new Cell();
-				if((row > 0 && col > 0)){
-					int randSeed = (int)(Math.random() * 100 + 1);
-					if(randSeed > 50)
-						nBoard[row][col].setMarked();
-				}
-			}
-		}
-		MazeTester newMaze = new MazeTester(nBoard, rowN, colN );
-		if(!newMaze.isTraversable())
-			createRandomMaze(nBoard);
-		return nBoard;
-	}
-	public void printBoard(Cell[][] newBoard){
-		for (int row = 0; row < newBoard.length; row++) {
-			for (int col = 0; col < newBoard[row].length; col++) {
-				System.out.print(newBoard[row][col].marked() + " | ");
-			}
-			System.out.println();
-		}
-	}
-	
-	/**
-	 * I like the setMarkers function! we should put a 
-	 * start and finish graphic in these cells
-	 * 
-	 */
-	public void setMarkers(){
-		board[0][0].setStart();
-		board[rowN-1][colN-1].setFinish();
-	}
 	// Main method
 	public static void main(String[] args) {
 		// Create a frame
-		//JFrame frame = new JFrame("Maze");
-
-		// Create an instance of MortgageApplet
 		RandomMaze frame = new RandomMaze();
-
-		// Add the applet instance to the frame
-		//frame.add(applet, BorderLayout.CENTER);
-
-		// Invoke init() and start()
-		frame.init();
-		//		applet.start();
-
-		// Display the frame
-		frame.setSize(500, 500);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setLocationRelativeTo(null); // Center the frame
-		frame.setVisible(true);
 	}
 
+
+
+
+
+
+
+	// recursive method to find a path from start to finish
 	public void findPath() {
 		if (findPath(0, 0)) {
 			jlblStatus.setText("path found");
@@ -276,6 +185,8 @@ public class RandomMaze extends JFrame {
 
 	}
 
+
+
 	// Temporary block the neighbor to prevent neighboring path
 	public void block(int row, int col) {
 		if (row > 0) {
@@ -295,6 +206,8 @@ public class RandomMaze extends JFrame {
 		}
 	}
 
+
+
 	// Remove the temporary block
 	public void unblock(int row, int col) {
 		if (row > 0) {
@@ -313,6 +226,17 @@ public class RandomMaze extends JFrame {
 			board[row][col + 1].unblock();
 		}
 	}
+
+
+	// method for closing the window
+	public void closeWindow(){
+		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
+	}
+
+
+
+	// method to only clear the path
 	public void clearPath() {
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
@@ -321,9 +245,89 @@ public class RandomMaze extends JFrame {
 		}
 		//repaint();	//added 5/8 AA
 	}
+
+
+
+	// clearAll method to clear the entire maze board
+	public void clearAll() {								// added 5/8 JB
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[row].length; col++) {
+				board[row][col].resetCell();
+			}
+		}
+	}
+
+
+
+	// getter method to determine if the mouse is pressed
+	public boolean isPressed(){			// added 5/8 JB
+		return pressed;
+	}
+
+	// setter method to set the mouse pressed variable
+	public void setPressed(boolean e){		// added 5/8 JB
+		pressed = e;
+	}
+
+
+
+
+	// method to add start and finish graphics to the board
+	public void setMarkers(){
+		board[0][0].setStart();
+		board[rowN-1][colN-1].setFinish();
+	}
+
+
+
+	// method to reset the path
+	protected void resetPath() {
+		pathFound = false;
+		//		repaint();
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[row].length; col++) {
+				board[row][col].unblock();
+				board[row][col].deselectCell();
+				unblock(row, col);
+			}
+		}
+		revalidate();
+		repaint();
+	}
+	public Cell[][] createRandomMaze(Cell[][] nBoard){
+		for (int row = 0; row < nBoard.length; row++) {
+			for (int col = 0; col < nBoard[row].length; col++) {
+				nBoard[row][col] = new Cell();
+				if((row > 0 && col > 0)){
+					int randSeed = (int)(Math.random() * 100 + 1);
+					if(randSeed > 50)
+						nBoard[row][col].setMarked();
+				}
+			}
+		}
+		MazeTester newMaze = new MazeTester(nBoard, rowN, colN );
+		if(!newMaze.isTraversable())
+			createRandomMaze(nBoard);
+		return nBoard;
+	}
+	public void printBoard(Cell[][] newBoard){
+		for (int row = 0; row < newBoard.length; row++) {
+			for (int col = 0; col < newBoard[row].length; col++) {
+				System.out.print(newBoard[row][col].marked() + " | ");
+			}
+			System.out.println();
+		}
+	}
+
+
+
+
+
+
+
 	// Inner class
 	class Cell extends JPanel implements MouseListener {
-//		private BufferedImage image;
+		//		private BufferedImage image;
 		private boolean marked = false;
 		private boolean visited = false;
 		private boolean blocked = false;
@@ -421,6 +425,7 @@ public class RandomMaze extends JFrame {
 				marked = !marked;		//added 5/8 AA
 				repaint();
 			}
+
 		}
 		public void mouseExited(MouseEvent e) {
 		}

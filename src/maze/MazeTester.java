@@ -64,7 +64,7 @@ public class MazeTester {
 			unblock(row,col);
 		}
 		return false;
-		
+
 	}
 	// Temporary block the neighbor to prevent neighboring path
 	public void block(int row, int col) {
