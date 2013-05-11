@@ -22,10 +22,9 @@ public class Maze extends JFrame {
 	private JButton jbtClearMaze = new JButton("Clear Maze");		// added 5/8 JB
 	private JButton jbtClose = new JButton("Close");				// added 5/8 JB
 	private JPanel jpBoard, jpButton;
-	private JLabel jlblStatus = new JLabel();
+	private JLabel jlblStatus = new JLabel("Started..");
 	private boolean pressed = false;				// added 5/8 JB
-
-
+	private static MainMenu mainFrame; //added 5/10 AA
 	public Maze(){
 		setTitle("Build Your Own Maze");
 		setSize(500, 500);
@@ -61,6 +60,7 @@ public class Maze extends JFrame {
 		jbtFindPath.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				clearPath();  //added 5/10 AA
 				findPath();
 			}
 		});
@@ -96,7 +96,11 @@ public class Maze extends JFrame {
 		// Create a frame
 		Maze frame = new Maze();
 	}
-
+	//added 5/10 AA
+	//Method used to set the parent frame for easy dismissal
+	public void setParent(MainMenu parentFrame){
+		mainFrame = parentFrame;
+	}
 
 
 
@@ -217,11 +221,8 @@ public class Maze extends JFrame {
 
 		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
+		mainFrame.setEnabled(true);	//Added 5/10 AA
 	}
-
-
-
-
 	// method to only clear the path
 	public void clearPath() {
 		for (int row = 0; row < board.length; row++) {
@@ -273,7 +274,6 @@ public class Maze extends JFrame {
 
 	// Inner class
 	class Cell extends JPanel implements MouseListener {
-		private BufferedImage image;
 		private boolean marked = false;
 		private boolean visited = false;
 		private boolean blocked = false;
@@ -387,7 +387,7 @@ public class Maze extends JFrame {
 			 * if you don't like it we can go back to the code above
 			 * 
 			 */
-			if(isPressed()){
+			if(isPressed() && !isStart() && !isFinish()){
 				marked = true;
 				repaint();
 			}
@@ -409,4 +409,3 @@ public class Maze extends JFrame {
 		}
 	}
 }
-

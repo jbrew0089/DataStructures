@@ -1,6 +1,7 @@
 package maze;
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.*;
@@ -11,7 +12,7 @@ public class MainMenu extends JFrame {
 	private static JRadioButton rdbtnLow = new JRadioButton("Low");
 	private static JRadioButton rdbtnMedium = new JRadioButton("Medium");
 	private static JRadioButton rdbtnHigh = new JRadioButton("High");
-
+	private final MainMenu mainFrame;		//Added 5/10 AA
 	public static int getBoardSize(){
 		int size = 10;
 		if(rdbtnLow.isSelected())
@@ -44,6 +45,7 @@ public class MainMenu extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenu() {
+		mainFrame = this;
 		setTitle("Adam & Jason's Recursive Maze Traversal Application");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 400);
@@ -76,26 +78,23 @@ public class MainMenu extends JFrame {
 		radioPanel.add(rdbtnLow);
 		radioPanel.add(rdbtnMedium);
 		radioPanel.add(rdbtnHigh);
-
 		rdbtnLow.setSelected(true);
-
-
-
-
-
 		btnRamdomMaze.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				RandomMaze randMaze = new RandomMaze();
+				randMaze.setParent(mainFrame);		//Added 5/10 AA
 				randMaze.setVisible(true);
+				setEnabled(false);
 			}
 		});
 		btnBuildMaze.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Maze maze = new Maze();
+				maze.setParent(mainFrame);			//Added 5/10 AA
 				maze.setVisible(true);
+				setEnabled(false);
 			}
 		});
-
 		JPanel titlePanel = new JPanel();
 		contentPane.add(titlePanel, BorderLayout.NORTH);
 
@@ -104,7 +103,7 @@ public class MainMenu extends JFrame {
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		titlePanel.add(lblTitle);
 
-		JPanel imagePanel = new JPanel();
+		JLabel imagePanel = new JLabel(new ImageIcon("BG.jpg"));	//Added 5/10 AA
 		contentPane.add(imagePanel, BorderLayout.CENTER);
 
 		Canvas imageCanvas = new Canvas();
