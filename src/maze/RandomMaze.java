@@ -15,11 +15,11 @@ public class RandomMaze extends JFrame {
 	private Cell[][] testBoard = new Cell[rowN][colN];
 	private JButton jbtFindPath = new JButton("Find Path");
 	private JButton jbtClearPath = new JButton("Clear Path");
-	private JButton jbtNewMaze = new JButton("New Maze");			// added 5/8 JB
-	private JButton jbtClose = new JButton("Close");				// added 5/8 JB
+	private JButton jbtNewMaze = new JButton("New Maze");
+	private JButton jbtClose = new JButton("Close");
 	private JPanel jpBoard, jpButton;
 	private JLabel jlblStatus = new JLabel("Started..");
-	private boolean pressed = false;				// added 5/8 JB
+	private boolean pressed = false;
 	private boolean pathFound = false;
 	private static MainMenu mainFrame;
 	public RandomMaze() {
@@ -35,8 +35,8 @@ public class RandomMaze extends JFrame {
 		jpButton.setLayout(new FlowLayout());
 		jpButton.add(jbtFindPath);
 		jpButton.add(jbtClearPath);
-		jpButton.add(jbtNewMaze);			// added 5/8 JB
-		jpButton.add(jbtClose);				// added 5/8 JB
+		jpButton.add(jbtNewMaze);
+		jpButton.add(jbtClose);
 		board = createRandomMaze(testBoard);
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
@@ -69,12 +69,12 @@ public class RandomMaze extends JFrame {
 				setMarkers();
 			}
 		});
-		jbtNewMaze.addActionListener(new ActionListener(){		// added 5/8
+		jbtNewMaze.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearAll();
 				jpBoard.removeAll();
-				board = createRandomMaze(testBoard); 				//added 5/8 AA
+				board = createRandomMaze(testBoard);
 				for (int row = 0; row < board.length; row++) {
 					for (int col = 0; col < board[row].length; col++) {
 						jpBoard.add(board[row][col]);
@@ -85,7 +85,7 @@ public class RandomMaze extends JFrame {
 				setMarkers();
 			}
 		});
-		jbtClose.addActionListener(new ActionListener(){		// added 5/8
+		jbtClose.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				closeWindow();
@@ -184,7 +184,7 @@ public class RandomMaze extends JFrame {
 	public void closeWindow(){
 		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
-		mainFrame.setEnabled(true);		//Added 5/10 AA
+		mainFrame.setEnabled(true);
 	}
 	//Method to only clear the path
 	public void clearPath() {
@@ -195,7 +195,7 @@ public class RandomMaze extends JFrame {
 		}
 	}
 	//Method to clear the board
-	public void clearAll() {								// added 5/8 JB
+	public void clearAll() {
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
 				board[row][col].resetCell();
@@ -203,11 +203,11 @@ public class RandomMaze extends JFrame {
 		}
 	}
 	//Getter method to determine if the mouse is pressed
-	public boolean isPressed(){			// added 5/8 JB
+	public boolean isPressed(){
 		return pressed;
 	}
 	//Setter method to set the mouse pressed variable
-	public void setPressed(boolean e){		// added 5/8 JB
+	public void setPressed(boolean e){
 		pressed = e;
 	}
 	// method to add start and finish graphics to the board
@@ -324,7 +324,7 @@ public class RandomMaze extends JFrame {
 			repaint();
 		}
 		//Method used to reset the cell completely
-		public void resetCell(){				// added 5/8 JB
+		public void resetCell(){
 			setBackground(Color.DARK_GRAY);
 			marked = false;
 			visited = false;
@@ -338,12 +338,12 @@ public class RandomMaze extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			try{
-				if(isStart()){		//added 5/8 AA
+				if(isStart()){
 					BufferedImage image = ImageIO.read(new File("StartIcon.jpg"));
 					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
 					g.drawImage(scaledImage, 0 ,0,null);
 				}
-				if(isFinish()){		//added 5/8 AA
+				if(isFinish()){
 					BufferedImage image = ImageIO.read(new File("FinishIcon.jpg"));
 					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
 					g.drawImage(scaledImage, 0 ,0,null);

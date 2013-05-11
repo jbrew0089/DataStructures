@@ -19,12 +19,12 @@ public class Maze extends JFrame {
 	private Cell[][] board = new Cell[rowN][colN];
 	private JButton jbtFindPath = new JButton("Find Path");
 	private JButton jbtClearPath = new JButton("Clear Path");
-	private JButton jbtClearMaze = new JButton("Clear Maze");		// added 5/8 JB
-	private JButton jbtClose = new JButton("Close");				// added 5/8 JB
+	private JButton jbtClearMaze = new JButton("Clear Maze");
+	private JButton jbtClose = new JButton("Close");
 	private JPanel jpBoard, jpButton;
 	private JLabel jlblStatus = new JLabel("Started..");
-	private boolean pressed = false;				// added 5/8 JB
-	private static MainMenu mainFrame; //added 5/10 AA
+	private boolean pressed = false;
+	private static MainMenu mainFrame;
 	public Maze(){
 		setTitle("Build Your Own Maze");
 		setSize(500, 500);
@@ -38,8 +38,8 @@ public class Maze extends JFrame {
 		jpButton.setLayout(new FlowLayout());
 		jpButton.add(jbtFindPath);
 		jpButton.add(jbtClearPath);
-		jpButton.add(jbtClearMaze);			// added 5/8 JB
-		jpButton.add(jbtClose);				// added 5/8 JB
+		jpButton.add(jbtClearMaze);
+		jpButton.add(jbtClose);
 
 
 		// Add cells to jpBoard
@@ -60,7 +60,7 @@ public class Maze extends JFrame {
 		jbtFindPath.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				clearPath();  //added 5/10 AA
+				clearPath();
 				findPath();
 			}
 		});
@@ -71,14 +71,14 @@ public class Maze extends JFrame {
 				setMarkers();
 			}
 		});
-		jbtClearMaze.addActionListener(new ActionListener(){		// added 5/8
+		jbtClearMaze.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearAll();
 				setMarkers();
 			}
 		});
-		jbtClose.addActionListener(new ActionListener(){		// added 5/8
+		jbtClose.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				closeWindow();
@@ -96,7 +96,7 @@ public class Maze extends JFrame {
 		// Create a frame
 		Maze frame = new Maze();
 	}
-	//added 5/10 AA
+
 	//Method used to set the parent frame for easy dismissal
 	public void setParent(MainMenu parentFrame){
 		mainFrame = parentFrame;
@@ -231,15 +231,9 @@ public class Maze extends JFrame {
 			}
 		}
 	}
-
-
-
-
-
-
-
+	
 	// clearAll method to clear the entire maze board
-	public void clearAll() {								// added 5/8 JB
+	public void clearAll() {
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[row].length; col++) {
 				board[row][col].resetCell();
@@ -247,18 +241,15 @@ public class Maze extends JFrame {
 		}
 	}
 
-
-
 	// getter method to determine if the mouse is pressed
-	public boolean isPressed(){			// added 5/8 JB
+	public boolean isPressed(){
 		return pressed;
 	}
 
 	// setter method to set the mouse pressed variable
-	public void setPressed(boolean e){		// added 5/8 JB
+	public void setPressed(boolean e){
 		pressed = e;
 	}
-
 
 	// method to add start and finish graphics to the board
 	public void setMarkers(){
@@ -337,7 +328,7 @@ public class Maze extends JFrame {
 			repaint();
 		}
 
-		public void resetCell(){				// added 5/8 JB
+		public void resetCell(){
 			setBackground(Color.DARK_GRAY);
 			marked = false;
 			visited = false;
@@ -351,12 +342,12 @@ public class Maze extends JFrame {
 			super.paintComponent(g);
 
 			try{
-				if(isStart()){		//added 5/8 AA
+				if(isStart()){
 					BufferedImage image = ImageIO.read(new File("StartIcon.jpg"));
 					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
 					g.drawImage(scaledImage, 0 ,0,null);
 				}
-				if(isFinish()){		//added 5/8 AA
+				if(isFinish()){
 					BufferedImage image = ImageIO.read(new File("FinishIcon.jpg"));
 					Image scaledImage = image.getScaledInstance(getSize().width, getSize().height, Image.SCALE_DEFAULT);
 					g.drawImage(scaledImage, 0 ,0,null);
