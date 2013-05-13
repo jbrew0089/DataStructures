@@ -3,10 +3,8 @@ package maze;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
+import java.awt.image.*;
+import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -221,7 +219,7 @@ public class Maze extends JFrame {
 
 		WindowEvent winClosingEvent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
-		mainFrame.setEnabled(true);	//Added 5/10 AA
+		mainFrame.setEnabled(true);	
 	}
 	// method to only clear the path
 	public void clearPath() {
@@ -364,20 +362,7 @@ public class Maze extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 		}
 
-		public void mouseEntered(MouseEvent e) {		// added 5/8 JB
-			//			if(isPressed() && !isStart() && !isFinish()){
-			//				marked = !marked;		//added 5/8 AA
-			//				repaint();
-
-			/**
-			 * try it out with this code, if you click on an empty cell
-			 * and drag it will fill the cells with the brick image and
-			 * it will not remove bricks if you go over them, but if you 
-			 * click on a cell with a brick it will remove it.
-			 * 
-			 * if you don't like it we can go back to the code above
-			 * 
-			 */
+		public void mouseEntered(MouseEvent e) {
 			if(isPressed() && !isStart() && !isFinish()){
 				marked = true;
 				repaint();
@@ -391,7 +376,7 @@ public class Maze extends JFrame {
 			setPressed(false);
 		}
 
-		public void mousePressed(MouseEvent e) {		// added 5/8 JB
+		public void mousePressed(MouseEvent e) {
 			if(!isStart() && !isFinish()){
 				setPressed(true);
 				marked = !marked;		
